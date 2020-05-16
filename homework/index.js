@@ -23,10 +23,10 @@
       if (key === 'Repository' || key === 'Description' || key === 'Forks' || key === 'Updated') {
         elem.innerHTML += `<strong>${key}:</strong> ${value} <br> `;
       }
-      else if (key === 'foto') {
+      else if (key === 'avatar') {
         elem.innerHTML += `<img src="${value}"></img>`
       }
-      else if (key === 'name') {
+      else if (key === 'username') {
         elem.innerHTML += `<span>${value}</span>`
       }
       else if (key === 'count') {
@@ -89,7 +89,7 @@
             return;
           }
           reposContributors.forEach(contributors => {
-            createAndAppend('li', repoContributions, { foto: contributors.avatar_url, name: contributors.login, count: contributors.contributions })
+            createAndAppend('li', repoContributions, { avatar: contributors.avatar_url, username: contributors.login, count: contributors.contributions })
           });
         });
       });
