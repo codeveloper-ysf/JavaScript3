@@ -2,18 +2,17 @@
 
 {
   function fetchJSON(url, cb) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url);
-    xhr.responseType = 'json';
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status <= 299) {
-        cb(null, xhr.response);
-      } else {
-        cb(new Error(`Network error: ${xhr.status} - ${xhr.statusText}`));
-      }
-    };
-    xhr.onerror = () => cb(new Error('Network request failed'));
-    xhr.send();
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            `Network error: ${response.status} - ${response.statusText}`,
+          );
+        }
+        return response.json();
+      })
+      .then((data) => cb(null, data))
+      .catch((error) => cb(error, null));
   }
 
   function createAndAppend(name, parent, options = {}) {
@@ -26,10 +25,7 @@
       else if (key === 'avatar') {
         elem.innerHTML += `<img src="${value}"></img>`
       }
-      else if (key === 'username') {
-        elem.innerHTML += `<span>${value}</span>`
-      }
-      else if (key === 'count') {
+      else if (key === 'username' || key === 'count') {
         elem.innerHTML += `<span>${value}</span>`
       }
       else {
@@ -40,7 +36,7 @@
   }
 
   function main(url) {
-    const header = document.createElement('header');
+    const header = document.querySelector('header');
     const heading = document.createElement('h1');
     heading.innerText = 'HYF Repositories';
     header.prepend(heading);
@@ -51,18 +47,19 @@
     firstOption.appendChild(firstOptionContent);
     selectBox.appendChild(firstOption);
     header.appendChild(selectBox);
-    document.body.prepend(header);
+    const repoContainer = document.querySelector('.repo-container');
+    const contributorsContainer = document.querySelector('.contributors-container');
+    const repoDetails = createAndAppend('ul', repoContainer);
+    const repoContributions = createAndAppend('ul', contributorsContainer);
     fetchJSON(url, (err, repos) => {
-      const root = document.getElementById('root');
+      const main = document.querySelector('.main-container');
       if (err) {
-        createAndAppend('div', root, {
+        createAndAppend('div', main, {
           text: err.message,
           class: 'alert-error',
         });
         return;
       }
-      const repoDetails = createAndAppend('ul', root);
-      const repoContributions = createAndAppend('ul', root);
       repos.sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
       repos.forEach(repo => {
         const repoOptions = document.createElement("option");
@@ -78,11 +75,11 @@
         repoDetails.textContent = '';
         repoContributions.textContent = '';
         const selectedRepo = selectBox.options[selectBox.selectedIndex].value;
-        const filteredRepo = repos.filter(a => a.id == selectedRepo);
+        const filteredRepo = repos.filter(repo => repo.id == selectedRepo);
         createAndAppend('li', repoDetails, { Repository: filteredRepo[0].name, Description: filteredRepo[0].description, Forks: filteredRepo[0].forks, Updated: filteredRepo[0].updated_at })
         fetchJSON(filteredRepo[0].contributors_url, (err, reposContributors) => {
           if (err) {
-            createAndAppend('div', root, {
+            createAndAppend('div', main, {
               text: err.message,
               class: 'alert-error',
             });
