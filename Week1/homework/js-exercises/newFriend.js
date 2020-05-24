@@ -1,21 +1,9 @@
 'use strict';
 
-// to launch this js file you just need to define into your html file.
-
-const scriptAxios = document.createElement('script');
-scriptAxios.src = "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js";
-document.body.prepend(scriptAxios);
-const newFriend = document.createElement('div');
-newFriend.style.width = '33%';
-document.body.prepend(newFriend);
-const axiosButton = document.createElement('button');
-axiosButton.innerText = 'Get AxiosRequest';
-document.body.prepend(axiosButton);
-const xmlButton = document.createElement('button');
-xmlButton.innerText = 'Get XMLHttpRequest';
-document.body.prepend(xmlButton);
+const newFriend = document.querySelector('div');
+const axiosButton = document.querySelector('#axiosButton');
+const xmlButton = document.querySelector('#xmlButton');
 const url = "https://www.randomuser.me/api";
-
 
 const friendFinder = (friend) => {
   newFriend.innerHTML = `<ul>

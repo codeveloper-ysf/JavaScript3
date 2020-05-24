@@ -1,16 +1,7 @@
 'use strict';
 
-// to launch this js file you just need to define into your html file.
-
-const scriptAxios = document.createElement('script');
-scriptAxios.src = "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js";
-document.body.prepend(scriptAxios);
-const imageTwo = document.createElement('img');
-imageTwo.style.width = '30%';
-document.body.prepend(imageTwo);
-const image = document.createElement('img');
-image.style.width = '30%';
-document.body.prepend(image);
+const image = document.querySelector('#imageXML');
+const imageTwo = document.querySelector('#imageAxios');
 const url = "https://xkcd.now.sh/?comic=latest";
 
 const xmlRequest = () => {
@@ -28,7 +19,7 @@ const xmlRequest = () => {
   xhr.send();
 }
 
-xmlRequest();
+xmlRequest(url);
 
 const axiosRequest = () => {
   axios.get(url)
@@ -36,4 +27,4 @@ const axiosRequest = () => {
     .catch(error => console.log(error.message))
 }
 
-axiosRequest();
+axiosRequest(url);
